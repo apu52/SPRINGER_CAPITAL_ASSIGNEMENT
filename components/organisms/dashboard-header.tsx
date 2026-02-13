@@ -6,11 +6,13 @@ import { H2 } from "@/components/atoms/typography"
 import { Moon, Sun, PanelLeftClose, PanelLeft } from "lucide-react"
 
 interface DashboardHeaderProps {
+  isMobile: boolean
   sidebarOpen: boolean
   onToggleSidebar: () => void
 }
 
 export function DashboardHeader({
+  isMobile,
   sidebarOpen,
   onToggleSidebar,
 }: DashboardHeaderProps) {
@@ -24,9 +26,11 @@ export function DashboardHeader({
           size="icon"
           onClick={onToggleSidebar}
           className="text-muted-foreground hover:text-foreground"
-          aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+          aria-label={sidebarOpen ? "Close navigation" : "Open navigation"}
         >
-          {sidebarOpen ? (
+          {isMobile ? (
+            <PanelLeft className="h-5 w-5" />
+          ) : sidebarOpen ? (
             <PanelLeftClose className="h-5 w-5" />
           ) : (
             <PanelLeft className="h-5 w-5" />

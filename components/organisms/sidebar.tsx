@@ -10,7 +10,10 @@ import {
 } from "lucide-react"
 
 interface SidebarProps {
-  open: boolean
+  isMobile: boolean
+  desktopOpen: boolean
+  mobileOpen: boolean
+  onMobileClose: () => void
 }
 
 const navItems = [
@@ -21,17 +24,30 @@ const navItems = [
   { label: "Help", icon: HelpCircle, active: false },
 ]
 
-export function Sidebar({ open }: SidebarProps) {
+export function Sidebar({
+  isMobile,
+  desktopOpen,
+  mobileOpen,
+  onMobileClose,
+}: SidebarProps) {
+  const open = isMobile ? mobileOpen : desktopOpen
+
   return (
     <>
       {/* Overlay for mobile */}
-      {open && (
-        <div className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden" />
+      {isMobile && mobileOpen && (
+        <button
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[1px]"
+          onClick={onMobileClose}
+          aria-label="Close sidebar"
+        />
       )}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 flex h-full flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-300 lg:relative lg:z-auto",
-          open ? "w-60" : "w-0 -translate-x-full lg:w-16 lg:translate-x-0"
+          "left-0 top-0 flex h-full flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-300",
+          isMobile
+            ? cn("fixed z-50 w-60", mobileOpen ? "translate-x-0" : "-translate-x-full")
+            : cn("relative z-auto", desktopOpen ? "w-60" : "w-16")
         )}
       >
         {/* Logo area */}
@@ -42,7 +58,7 @@ export function Sidebar({ open }: SidebarProps) {
           <span
             className={cn(
               "text-sm font-semibold text-sidebar-primary-foreground transition-opacity duration-200",
-              open ? "opacity-100" : "opacity-0 lg:hidden"
+              open ? "opacity-100" : "opacity-0 hidden"
             )}
           >
             SalesHub
@@ -54,6 +70,9 @@ export function Sidebar({ open }: SidebarProps) {
           {navItems.map((item) => (
             <button
               key={item.label}
+              onClick={() => {
+                if (isMobile) onMobileClose()
+              }}
               className={cn(
                 "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 item.active
@@ -65,7 +84,7 @@ export function Sidebar({ open }: SidebarProps) {
               <span
                 className={cn(
                   "transition-opacity duration-200",
-                  open ? "opacity-100" : "opacity-0 lg:hidden"
+                  open ? "opacity-100" : "opacity-0 hidden"
                 )}
               >
                 {item.label}
@@ -88,7 +107,7 @@ export function Sidebar({ open }: SidebarProps) {
             <div
               className={cn(
                 "flex flex-col transition-opacity duration-200",
-                open ? "opacity-100" : "opacity-0 lg:hidden"
+                open ? "opacity-100" : "opacity-0 hidden"
               )}
             >
               <span className="text-xs font-medium text-sidebar-accent-foreground">
