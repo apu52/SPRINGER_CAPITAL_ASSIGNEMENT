@@ -29,6 +29,8 @@ interface SalesChartProps {
   onToggleYear: (year: number) => void
   threshold: string
   onThresholdChange: (value: string) => void
+  onReset: () => void
+  canReset: boolean
 }
 
 const YEAR_COLORS: Record<number, string> = {
@@ -79,6 +81,8 @@ export function SalesChart({
   onToggleYear,
   threshold,
   onThresholdChange,
+  onReset,
+  canReset,
 }: SalesChartProps) {
   const thresholdNum = threshold ? Number(threshold) : 0
 
@@ -124,6 +128,8 @@ export function SalesChart({
             onToggleYear={onToggleYear}
             threshold={threshold}
             onThresholdChange={onThresholdChange}
+            onReset={onReset}
+            canReset={canReset}
           />
         </div>
       </CardHeader>

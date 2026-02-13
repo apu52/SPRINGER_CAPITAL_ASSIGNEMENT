@@ -13,6 +13,9 @@ import type { ChartType } from "@/components/organisms/chart-controls"
 import type { SalesRecord } from "@/lib/data"
 
 const AVAILABLE_YEARS = [2022, 2023, 2024]
+const DEFAULT_CHART_TYPE: ChartType = "bar"
+const DEFAULT_SELECTED_YEARS = [...AVAILABLE_YEARS]
+const DEFAULT_THRESHOLD = ""
 
 function LoadingSkeleton() {
   return (
@@ -54,9 +57,9 @@ export function DashboardPage() {
   const [data, setData] = useState<SalesRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
-  const [chartType, setChartType] = useState<ChartType>("bar")
-  const [selectedYears, setSelectedYears] = useState<number[]>([2022, 2023, 2024])
-  const [threshold, setThreshold] = useState("")
+  const [chartType, setChartType] = useState<ChartType>(DEFAULT_CHART_TYPE)
+  const [selectedYears, setSelectedYears] = useState<number[]>(DEFAULT_SELECTED_YEARS)
+  const [threshold, setThreshold] = useState(DEFAULT_THRESHOLD)
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -86,6 +89,18 @@ export function DashboardPage() {
         : [...prev, year].sort()
     )
   }
+
+  const handleResetFilters = () => {
+    setChartType(DEFAULT_CHART_TYPE)
+    setSelectedYears([...DEFAULT_SELECTED_YEARS])
+    setThreshold(DEFAULT_THRESHOLD)
+  }
+
+  const isDefaultView =
+    chartType === DEFAULT_CHART_TYPE &&
+    threshold === DEFAULT_THRESHOLD &&
+    selectedYears.length === DEFAULT_SELECTED_YEARS.length &&
+    selectedYears.every((year, index) => year === DEFAULT_SELECTED_YEARS[index])
 
   // Calculate metrics
   const thresholdNum = threshold ? Number(threshold) : 0
@@ -151,6 +166,8 @@ export function DashboardPage() {
             onToggleYear={toggleYear}
             threshold={threshold}
             onThresholdChange={setThreshold}
+            onReset={handleResetFilters}
+            canReset={!isDefaultView}
           />
 
           {/* Data table summary */}

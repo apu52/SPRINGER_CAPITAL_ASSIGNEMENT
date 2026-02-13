@@ -16,6 +16,8 @@ interface ChartControlsProps {
   onToggleYear: (year: number) => void
   threshold: string
   onThresholdChange: (value: string) => void
+  onReset: () => void
+  canReset: boolean
 }
 
 const chartOptions: { type: ChartType; icon: typeof BarChart3; label: string }[] = [
@@ -32,6 +34,8 @@ export function ChartControls({
   onToggleYear,
   threshold,
   onThresholdChange,
+  onReset,
+  canReset,
 }: ChartControlsProps) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -66,8 +70,19 @@ export function ChartControls({
       </div>
 
       {/* Filter */}
-      <div className="w-full sm:w-56">
-        <FilterInput value={threshold} onChange={onThresholdChange} />
+      <div className="flex w-full gap-2 sm:w-auto sm:items-center">
+        <div className="w-full sm:w-56">
+          <FilterInput value={threshold} onChange={onThresholdChange} />
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onReset}
+          disabled={!canReset}
+          className="whitespace-nowrap"
+        >
+          Reset
+        </Button>
       </div>
     </div>
   )
